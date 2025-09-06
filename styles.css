@@ -1,16 +1,13 @@
+html,
 body {
-  background-color: bisque;
+  margin: 0;
+  padding: 0;
+  height: 100%; /* make body fill viewport */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* vertical centering */
+  justify-content: center; /* horizontal centering */
 }
-.maze {
-  background-color: aliceblue;
-  width: 700px;
-  height: 700px;
-}
-.player {
-  height: 50px;
-  width: 50px;
-  background-color: aqua;
+
+canvas {
+  display: block;
 }
