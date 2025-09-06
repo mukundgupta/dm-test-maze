@@ -8,6 +8,7 @@ body {
   justify-content: center; /* horizontal centering */
 
   overflow: hidden;
+  touch-action: none; /* disables touch scrolling */
 }
 
 canvas {
