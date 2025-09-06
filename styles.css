@@ -1,0 +1,16 @@
+body {
+  background-color: bisque;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.maze {
+  background-color: aliceblue;
+  width: 700px;
+  height: 700px;
+}
+.player {
+  height: 50px;
+  width: 50px;
+  background-color: aqua;
+}

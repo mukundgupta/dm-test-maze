@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Maze Drag Player</title>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f2f2f2;
+      }
+      canvas {
+        border: 2px solid #000;
+        touch-action: none; /* prevents touch scrolling */
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="gameCanvas" width="480" height="480"></canvas>
+    <script>
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const maze = [
+        "############",
+        "#          #",
+        "#  ######  #",
+        "#     #    #",
+        "###   #  ###",
+        "#     #    #",
+        "#  ######  #",
+        "#          #",
+        "############",
+      ];
+
+      const tileSize = 40;
+      const player = {
+        x: 60, // pixel coords
+        y: 60,
+        size: 15,
+      };
+
+      let dragging = false;
+
+      function drawMaze() {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+
+        for (let row = 0; row < maze.length; row++) {
+          for (let col = 0; col < maze[row].length; col++) {
+            if (maze[row][col] === "#") {
+              ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+            }
+          }
+        }
+
+        // Player
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function collidesWithWall(x, y) {
+        for (let row = 0; row < maze.length; row++) {
+          for (let col = 0; col < maze[row].length; col++) {
+            if (maze[row][col] === "#") {
+              const rectX = col * tileSize;
+              const rectY = row * tileSize;
+              const rectW = tileSize;
+              const rectH = tileSize;
+
+              const closestX = Math.max(rectX, Math.min(x, rectX + rectW));
+              const closestY = Math.max(rectY, Math.min(y, rectY + rectH));
+
+              const dx = x - closestX;
+              const dy = y - closestY;
+
+              if (dx * dx + dy * dy < player.size * player.size) {
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      }
+
+      function moveToward(targetX, targetY) {
+        let dx = targetX - player.x;
+        let dy = targetY - player.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < 1) return; // already close enough
+
+        dx /= dist; // normalize
+        dy /= dist;
+
+        const steps = Math.floor(dist); // step size = 1px
+        for (let i = 0; i < steps; i++) {
+          const newX = player.x + dx;
+          const newY = player.y + dy;
+          if (!collidesWithWall(newX, newY)) {
+            player.x = newX;
+            player.y = newY;
+          } else {
+            break; // stop if collision
+          }
+        }
+      }
+
+      canvas.addEventListener("pointerdown", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const dist = Math.hypot(x - player.x, y - player.y);
+        if (dist < player.size + 10) {
+          dragging = true;
+        }
+      });
+
+      canvas.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        moveToward(x, y);
+        drawMaze();
+      });
+
+      canvas.addEventListener("pointerup", () => {
+        dragging = false;
+      });
+
+      drawMaze();
+    </script>
+  </body>
+</html>
