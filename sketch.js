@@ -1,4 +1,4 @@
-// sketch.js - blind maze: walls + background same color until endpoint reached
+// sketch.js
 let player;
 let walls = [];
 let endpoint; // goal square
@@ -91,7 +91,7 @@ function setup() {
 function draw() {
   // bg and wall colors change based on reveak state
   if (!revealed) {
-    background(BG_REVEALED);
+    background(BLIND_BG);
     walls.forEach(w => w.shapeColor = BLIND_BG);
   } else {
     background(BG_REVEALED);
