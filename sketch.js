@@ -3,25 +3,32 @@ let player;
 let walls = [];
 let endpoint; // goal square
 
-const gridSize = 50;
-const rows = 10;
-const cols = 10;
+const gridSize = 40;
+const rows = 15;
+const cols = 15;
 
 let maze = [
-  [1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,1,0,0,0,1],
-  [1,0,1,1,0,1,0,1,0,1],
-  [1,0,1,0,0,1,0,1,0,1],
-  [1,0,1,0,1,1,0,1,0,1],
-  [1,1,0,0,0,0,0,1,0,1],
-  [1,1,1,1,1,1,0,1,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,0,1,1,1,1,1,1,0,1],
-  [1,1,1,1,1,1,1,1,1,1]
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+  [1,0,1,0,1,0,1,1,0,1,0,1,1,0,1],
+  [1,0,1,0,0,0,0,1,0,0,0,0,1,0,1],
+  [1,0,1,1,1,1,0,1,1,1,1,0,1,0,1],
+  [1,0,0,0,0,1,0,0,0,0,1,0,1,0,1],
+  [1,1,1,1,0,1,1,1,1,1,1,0,1,0,1],
+  [1,0,0,1,0,0,0,0,1,0,0,0,1,0,1],
+  [1,0,1,1,1,1,1,0,1,1,1,0,1,0,1],
+  [1,0,0,0,0,0,1,0,0,0,1,0,0,0,1],
+  [1,0,1,1,1,0,1,0,1,0,1,1,1,0,1],
+  [1,0,1,0,0,0,0,0,1,0,1,0,1,0,1],
+  [1,0,1,0,1,1,1,0,1,1,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 
-let revealed = false; // whether colors are revealed
-let dragging = false;  // whether player is being dragged/touched
+
+
+let revealed = false; 
+let dragging = false; 
 
 // Colors
 let BLIND_BG;
@@ -76,15 +83,15 @@ function setup() {
     }
   }
 
-  // Ensure initial sprite colors (walls will be colored each frame depending on revealed)
+  // initial sprite colors
   player.shapeColor = PLAYER_COLOR;
   endpoint.shapeColor = ENDPOINT_COLOR;
 }
 
 function draw() {
-  // background + wall colors depend on reveal state
+  // bg and wall colors change based on reveak state
   if (!revealed) {
-    background(BLIND_BG);
+    background(BG_REVEALED);
     walls.forEach(w => w.shapeColor = BLIND_BG);
   } else {
     background(BG_REVEALED);
@@ -113,7 +120,7 @@ function draw() {
     let dy = ty - player.position.y;
     let mag = sqrt(dx * dx + dy * dy);
     if (mag > 1) {
-      const speed = 6; // pixels per frame
+      const speed = 7; // pixels per frame
       const vx = (dx / mag) * min(speed, mag);
       const vy = (dy / mag) * min(speed, mag);
 
