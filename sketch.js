@@ -47,7 +47,7 @@ function setup() {
   PLAYER_COLOR = color(0, 76, 255); // blue
   ENDPOINT_COLOR = color(0, 200, 0); // green
 
-  // Find a starting open cell (first open cell top-left)
+  // starting open cell (first open cell top-left)
   const start = findFirstOpen();
   player = createSprite(
     start.x * gridSize + gridSize / 2,
@@ -57,7 +57,7 @@ function setup() {
   );
   player.shapeColor = PLAYER_COLOR;
 
-  // Find an endpoint (search from bottom-right for an open cell)
+  // endpoint (search from bottom-right for an open cell)
   const goal = findLastOpen();
   endpoint = createSprite(
     goal.x * gridSize + gridSize / 2,
@@ -89,7 +89,7 @@ function setup() {
 }
 
 function draw() {
-  // bg and wall colors change based on reveak state
+  // bg and wall colors change based on reveal state
   if (!revealed) {
     background(BLIND_BG);
     walls.forEach(w => w.shapeColor = BLIND_BG);
@@ -168,7 +168,7 @@ function findFirstOpen() {
   return { x: 1, y: 1 };
 }
 
-// Utility: find last open cell (bottom-right)
+// find last open cell (bottom-right)
 function findLastOpen() {
   for (let y = rows - 1; y >= 0; y--) {
     for (let x = cols - 1; x >= 0; x--) {
@@ -179,7 +179,7 @@ function findLastOpen() {
   return { x: cols - 2, y: rows - 2 };
 }
 
-// Start dragging only if initial touch/click is on the player
+// start dragging only if initial click is on the player
 function mousePressed() {
   if (dist(mouseX, mouseY, player.position.x, player.position.y) < gridSize * 0.6) {
     dragging = true;
@@ -191,12 +191,12 @@ function mouseReleased() {
 }
 
 function touchStarted() {
-  // single-finger touch
+  // one finger touch
   const tx = touches.length > 0 ? touches[0].x : mouseX;
   const ty = touches.length > 0 ? touches[0].y : mouseY;
   if (dist(tx, ty, player.position.x, player.position.y) < gridSize * 0.6) {
     dragging = true;
-    return false; // prevent default scrolling on some browsers
+    return false; 
   }
   return true;
 }
@@ -205,3 +205,31 @@ function touchEnded() {
   dragging = false;
   return false;
 }
+
+
+let tapCount = 0;
+let tapTimer;
+
+const reloadArea = document.getElementById('reloadArea');
+
+function handleTap() {
+  tapCount++;
+  console.log(tapCount);
+  clearTimeout(tapTimer);
+
+  if (tapCount === 3) {
+    location.reload(); // triple-tap triggers reload
+    tapCount = 0;
+  } else {
+    tapTimer = setTimeout(() => tapCount = 0, 500); // reset after 500ms
+  }
+}
+
+// listen for mouse clicks
+reloadArea.addEventListener('click', handleTap);
+
+// listen for touch taps
+reloadArea.addEventListener('touchstart', (e) => {
+  e.preventDefault(); // prevent simulated mouse click
+  handleTap();
+}, { passive: false });
